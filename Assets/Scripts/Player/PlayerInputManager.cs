@@ -9,6 +9,7 @@ public class PlayerInputManager : MonoBehaviour
     public bool moveRight = false;
     public bool moveLeft = false;
     public int xInputValue = 0;
+    public bool jumpInput = false;
 
     private void Awake()
     {
@@ -32,6 +33,8 @@ public class PlayerInputManager : MonoBehaviour
 
             playerControls.PlayerMovement.Left.performed += i => moveLeft = true;
             playerControls.PlayerMovement.Left.canceled += i => moveLeft = false;
+
+            playerControls.PlayerMovement.Jump.performed += i => jumpInput = true;
         }
 
         playerControls.Enable();
@@ -42,5 +45,12 @@ public class PlayerInputManager : MonoBehaviour
         if (moveLeft) { xInputValue = -1; }
         else if (moveRight) { xInputValue = 1; }
         else { xInputValue = 0; }
+
+        HandleJumpInput();
+    }
+
+    private void HandleJumpInput()
+    {
+        if (jumpInput) { jumpInput = false; }
     }
 }

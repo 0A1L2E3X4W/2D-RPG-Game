@@ -9,7 +9,10 @@ public class PlayerState
     private string animBoolName;
 
     [Header("MOVE INPUT")]
-    public int xInput;
+    public int xInput = 0;
+
+    [Header("JUMP")]
+    public bool isJumping = false;
 
     public PlayerState(Player _player, PlayerStateMachine _stateMachine, string _animBoolName)
     {
@@ -26,6 +29,9 @@ public class PlayerState
     public virtual void Update()
     {
         xInput = PlayerInputManager.Instance.xInputValue;
+        isJumping = PlayerInputManager.Instance.jumpInput;
+
+        player.anim.SetFloat("YVelocity", player.rb.linearVelocityY);
     }
 
     public virtual void Exit()
