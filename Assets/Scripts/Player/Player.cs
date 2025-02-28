@@ -30,6 +30,10 @@ public class Player : MonoBehaviour
     [SerializeField] private float wallCheckDistance;
     [SerializeField] private LayerMask groundLayer;
 
+    [Header("FACING")]
+    public int facingDir { get; private set; } = 1;
+    private bool facingRight = true;
+
     private void Awake()
     {
         stateMachine = new();
@@ -52,9 +56,10 @@ public class Player : MonoBehaviour
         stateMachine.currentState.Update();
     }
 
-    public void SetVelocity(float _x, float _y)
+    public void SetVelocity(float _xVelocity, float _yVelocity)
     {
-        rb.linearVelocity = new(_x, _y);
+        rb.linearVelocity = new(_xVelocity, _yVelocity);
+        FlipController(_xVelocity);
     }
 
     public bool IsGroundDetected() => Physics2D.Raycast(groundCheck.position, Vector2.down, groundCheckDistance, groundLayer);
@@ -64,5 +69,21 @@ public class Player : MonoBehaviour
     {
         Gizmos.DrawLine(groundCheck.position, new Vector3(groundCheck.position.x, groundCheck.position.y - groundCheckDistance));
         Gizmos.DrawLine(wallCheck.position, new Vector3(wallCheck.position.x + wallCheckDistance, wallCheck.position.y));
+    }
+
+    // FLIP
+    private void Flip()
+    {
+        facingDir *= -1;
+        facingRight = !facingRight;
+        transform.Rotate(0, 180, 0);
+    }
+
+    public void FlipController(float _xVelocity)
+    {
+        if (_xVelocity > 0 && !facingRight)
+            Flip();
+        else if (_xVelocity < 0 && facingRight)
+            Flip();
     }
 }
